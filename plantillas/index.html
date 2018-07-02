@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CalPy</title>
+    <script type="text/javascript" src="/static/jquery.min.js" ></script>
+</head>
+<body>
+    <h1>CalPy</h1>
+    <form action="{% url 'resolver' %}" method="post">
+        {% csrf_token %}
+        {{ formulario.as_p }}
+        <button type="submit">Resolver</button>
+    </form>
+    {% if solucion %}
+        <h2>Problema:</h2>
+        <div>{{ problema }}</div>
+        <h2>Solucion:</h2>
+        <div>{{ solucion }}</div>
+    {% endif %}
+</body>
+</html>
