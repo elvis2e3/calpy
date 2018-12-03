@@ -1,0 +1,111 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+
+{% block extra_meta %}
+    <title>{% trans 'Vuela con Airning | Blog Airning' %}</title>
+    <meta name="description"
+          content="{% trans 'Blog con información sobre aspectos relacionados con el transporte aéreo de pasajeros. Información, incidencias, vacaciones, consejos. Vuela sin sobresaltos con airning.' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="col-xs-12 blog">
+        <div class="bgblue depth-0"></div>
+    </div>
+    <div class="container">
+        <h1 class="h1-white">{% trans 'Blog' %}</h1>
+        <div class="vspacing-5"></div>
+        <div class="dropdown">
+            <button class="btn btn-edit dropdown-toggle" data-toggle="dropdown">{% trans 'FILTRAR POR CATEGORIA' %}
+                <span class="caret"></span></button>
+            <ul class="dropdown-menu" role="menu">
+                <li><a href="{% url 'blog' %}" class="ra-green">{% trans 'Todas' %}</a></li>
+                <li class="divider"></li>
+                {% for cat in categories %}
+                    <li><a href="{% url 'blog' cat.id %}" class="ra-green">{{ cat.name }}</a></li>
+                    <li class="divider"></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="vspacing-4"></div>
+        <div class="row">
+                {% for article in articles %}
+                    <div class="col-xs-12 col-md-4">
+                        <div class="card-blog">
+                            {% if article.image %}
+                                <a href="{% url 'get_article' article.slug %}"><img class="img-blog" src="{{ article.image|thumbnail_url:'blog_medium' }}"
+                                     alt="Profile image">
+                                </a>
+                            {% else %}
+                                <img class="img-blog"
+                                     src="{% static 'refundair/img/logo_280x150.png' %}" alt="Profile image">
+                            {% endif %}
+                            <div class="container-card">
+                                <p class="date">{{ article.date|date:'d F Y' }}</p>
+
+                                <h3 style="height:80px;"><a href="{% url 'get_article' article.slug %}">{{ article.title }}</a></h3>
+                                <p class="category">{{ article.category|default:_('Sin categoría') }}</p>
+                                <p class="text-content" style="height:80px;">
+                                    <a href="{% url 'get_article' article.slug %}">
+                                        {{ article.content|striptags|truncatechars:150 }}
+                                    </a>
+                                    <span class="clearfix"></span>
+                                </p>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6 col-md-6">
+                                        <p class="article-creator">{{ article.user.first_name }} {{ article.user.last_name }}</p>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6 col-md-6">
+                                            <a class="share-icon"
+                                               href="https://www.facebook.com/sharer/sharer.php?u=https://www.airning.com{% url 'get_article' article.slug %}"
+                                               target="_blank"><img src="{% static 'refundair/img/social/facebook.png' %}"
+                                                                    alt=""></a>
+                                            <a class="share-icon"
+                                               href="https://twitter.com/home?status=https%3A//www.airning.com{% url 'get_article' article.slug %}"
+                                               target="_blank"><img src="{% static 'refundair/img/social/twitter.png' %}"
+                                                                    alt=""></a>
+                                            <a class="share-icon"
+                                               href="web.whatsapp.com://send?text=Hey mira esto https://www.airning.com{% url 'get_article' article.slug %}"
+                                               target="_blank">
+                                                <img src="{% static 'refundair/img/social/whatsapp.png' %}" alt=""></a>
+        {#                                    <a class="share-icon visible-xs"#}
+        {#                                       href="whatsapp://send?text=Hey mira esto https://www.airning.com{% url 'get_article' article.slug %}"#}
+        {#                                       data-action="share/whatsapp/share" target="_blank"><img#}
+        {#                                        src="{% static 'refundair/img/social/whatsapp.png' %}" alt=""></a>#}
+                                    </div>
+                                </div>
+                                <div class="vspacing-2"></div>
+                            </div><!-- .container -->
+                        </div> <!-- .card-blog -->
+                    </div> <!-- .col -->
+                {% empty %}
+                    <h3>{% trans 'No se ha escrito nada aún' %}</h3>
+                {% endfor %}
+
+                {% if is_paginated %}
+                    <div class="row">
+                        <div class="col-xs-12 text-center">
+                            <div class="pagination">
+                                <span class="step-links">
+                                    {% if articles.has_previous %}
+                                        <a href="?page={{ articles.previous_page_number }}">{% trans "anterior" %}</a>
+                                    {% endif %}
+
+                                    <span class="current">
+                                        {% trans 'Pagina' %} {{ articles.number }} {% trans 'de' %} {{ articles.paginator.num_pages }}.
+                                    </span>
+
+                                    {% if articles.has_next %}
+                                        <a href="?page={{ articles.next_page_number }}">{% trans 'siguiente' %}</a>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+        </div> <!-- .row -->
+    </div><!-- .container -->
+    <div class="vspacing-6"></div>
+{% endblock content %}
+

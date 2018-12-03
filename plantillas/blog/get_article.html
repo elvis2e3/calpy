@@ -1,0 +1,97 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+{% block extra_meta %}
+    <title>{{ article.meta_title|default:'Blog de www.airning.com' }}</title>
+    <meta name="description"
+          content="{{ article.meta_description|default:_('Airning te ayuda a reclamar indemnización por retraso de vuelo, pérdida de equipaje, cancelación de vuelo, overbooking o denegación de embarque') }}">
+    <meta name="keyword"
+          content="{{ article.meta_keywords|default:_('Airning te ayuda a reclamar indemnización por retraso de vuelo') }}">
+{% endblock %}
+{% block content %}
+    <div class="section-blue">
+        <div class="container">
+            <div class="col-xs-12">
+                <div class="blog-general-title">{% trans 'Blog' %}</div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-9 card-article">
+                <div class="col-xs-12">
+                    <div class="info-box white depth-0">
+                        <h1 class="blog-title">{{ article.title }}</h1>
+                        <div class="category" style="color:#aaa;">{{ article.category.name }}</div>
+                        <p>
+                                {{ article.content|safe }}
+                        </p>
+                        {% if article.image %}
+                            <img src="{{ article.image|thumbnail_url:'avatar_big' }}" alt="Profile image">
+                        {% else %}
+                            <img src="{% static 'refundair/img/logo_280x54.png' %}" alt="Profile image"
+                                 class="img-thumbnail">
+                        {% endif %}
+                        <hr>
+                        <div>
+                            <span class="pull-left">
+                                <div class="green">{{ article.user.first_name }} {{ article.user.last_name }}</div>
+                                <div class="date">{{ article.date|date:'d F Y' }}</div>
+                            </span>
+                            <span class="pull-right">
+                                <a href="https://www.linkedin.com/shareArticle?mini=true&url=&title=&summary=&source={{ request.get_full_path }}"
+                                   target="_blank"><img src="{% static 'refundair/img/social/linkedin-green.png' %}"
+                                                        alt="Compartir en linkedin"></a>
+                                <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.get_full_path }}"
+                                   target="_blank"><img src="{% static 'refundair/img/social/facebook-green.png' %}"
+                                                        alt="Compartir en facebook"></a>
+                                <a href="https://twitter.com/home?status={{ request.get_full_path }}"
+                                   target="_blank"><img src="{% static 'refundair/img/social/twitter-green.png' %}"
+                                                        alt="Compartir en twitter"></a>
+                            </span>
+                        </div>
+                <div class="clearfix"></div>
+                <div class="vspacing-1"></div>
+                    </div>
+                </div>
+
+
+                <div class="vspacing-4"></div>
+                <div class="col-xs-12">
+                    <a href="{% url 'blog' %}" class="btn btn-edit btn-block">Volver</a>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-md-3">
+                <div class="info-box white depth-0">
+                    <h2>{% trans "Categorías" %}</h2>
+                    <hr>
+                    {% for category in categories %}
+                        <p>{{ category.name }}</p>
+                    {% empty %}
+                        <p>{% trans 'No existen categorías registradas' %}</p>
+                    {% endfor %}
+                </div>
+                <div class="info-box white depth-0">
+                    <h4>{% trans 'Suscríbete a nuestro blog para no perderte ninguna notícia.' %}</h4>
+                    <form action="{% url 'email_list' %}" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="{% trans 'Email' %} *"
+                                   value="{{ form.email.value|default:'' }}"
+                                   class="form-control {% if form.email.errors %}has-error{% endif %}">
+                            {% if form.email.errors %}
+                                <label class="control-label label-error">{{ form.email.errors }}</label>
+                            {% endif %}
+                        </div>
+                        <input type="submit" class="btn btn-primary btn-block" value="{% trans 'Suscribirme'|upper %}">
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+    <div class="vspacing-4"></div>
+{% endblock content %}

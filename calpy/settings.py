@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'calc',
-	'django_extensions',
+    'easy_thumbnails',
+    'blog',
+    # 'django_extensions',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +70,12 @@ TEMPLATES = [
         },
     },
 ]
+
+# THUMBNAIL_ALIASES = {
+#     '': {
+#         'avatar': {'size': (50, 50), 'crop': True},
+#     },
+# }
 
 WSGI_APPLICATION = 'calpy.wsgi.application'
 

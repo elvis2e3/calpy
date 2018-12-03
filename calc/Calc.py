@@ -2,6 +2,12 @@
 
 from sympy import *
 class calc():
+	def parse_latex(self,fun):
+		dif = latex(S(fun,evaluate=False))
+		print dif
+		solc = str(dif)
+		return solc
+
 	def limites(self,fun):
 		"""El primer argumento es la funcion, el segundo es el
 		simbolo x, y el tercero es hacia donde tiende acercarse x.
@@ -10,14 +16,14 @@ class calc():
         equivale a  ∞.   limx→x0f(x)"""
 		x, y = symbols('x y')
 		dif = limit(fun,x,oo)
-		pprint(dif)
+		dif = latex(dif)
 		solc = str(dif)
 		return solc
 		
 	def derivadas(self,fun):
 		x, y = symbols('x y')
 		dif = diff(fun,x)
-		pprint(dif)
+		dif = latex(dif)
 		solc = str(dif)
 		return solc
 	
@@ -32,7 +38,7 @@ class calc():
 	    esto es equivalente al símbolo de infinito."""
 	    x, y = symbols('x y')
 	    dif = integrate(fun)
-	    pprint(dif)
+	    dif = latex(dif)
 	    solc = str(dif)
 	    return solc
 	
@@ -42,6 +48,7 @@ class calc():
 		x = symbols('x')
 		diffeq = Eq(fun)
 		sol = dsolve(diffeq, y(x))
+		sol = latex(sol)
 		solc=str(sol)
 		pprint(diffeq)
 		pprint(sol)

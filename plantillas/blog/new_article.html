@@ -1,0 +1,121 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+{% load  wysiwyg %}
+{% block content %}
+    {% wysiwyg_setup %}
+
+    <div class="container">
+
+        <div class="vspacing-4"></div>
+        <a href="{% url 'my_articles' %}" class="btn btn-edit">{% trans 'Mis artículos' %}</a>
+        {% if article %}
+            <a href="{% url 'preview_article' article.slug %}" class="btn btn-air" target="_blank"> {% trans 'Vista previa' %} </a>
+        {% endif %}
+        <div class="vspacing-4"></div>
+        <div class="clearfix"></div>
+        <form method="POST" action-xhr="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="col-xs-12 col-md-4">
+                <div class="form-group">
+                    <label class="control">{% trans 'Título' %}</label>
+                    <input type="text" class="form-control" name="title" value="{{ form.title.value|default:'' }}"
+                           required>
+                    {% if form.title.errors %}
+                        <label class="control-label label-error">{{ form.title.errors }}</label>
+                    {% endif %}
+                </div>
+
+                <div class="text-center">
+                    {% if article.image %}
+                        <img id="avatar_img_id" style="cursor:pointer; width:200px;"
+                             src="{{ article.image|thumbnail_url:'avatar_big' }}" alt="Profile image"
+                             class="img-thumbnail">
+                    {% else %}
+                        <img id="avatar_img_id" style="cursor:pointer; width:200px;"
+                             src="{% static 'refundair/img/logo_280x54.png' %}" alt="Profile image"
+                             class="img-thumbnail">
+                    {% endif %}
+                    <div class="form-group">
+                        <input type="file" id="id_image" name="image" class="hidden" onchange="upload_img(this);">
+                        <div class="vspacing-2"></div>
+                        <button id="change_img_btn" class="btn btn-edit">{% trans 'Seleccionar imagen' %}</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>{{ form.meta_title.label }}</label>
+                    <input type="text" name="meta_title" class="form-control"
+                           value="{{ form.meta_title.value|default:'' }}">
+                    {% if form.meta_title.errors %}
+                        <label class="control-label label-error">{{ form.meta_title.errors }}</label>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.meta_keywords.label }}</label>
+                    <input type="text" name="meta_keywords" class="form-control"
+                           value="{{ form.meta_keywords.value|default:'' }}">
+                    {% if form.meta_keywords.errors %}
+                        <label class="control-label label-error">{{ form.meta_keywords.errors }}</label>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.meta_description.label }}</label>
+                    <input type="text" name="meta_description" class="form-control"
+                           value="{{ form.meta_description.value|default:'' }}">
+                    {% if form.meta_description.errors %}
+                        <label class="control-label label-error">{{ form.meta_description.errors }}</label>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label>{{ form.category.label }}</label>
+                    {{ form.category }}
+                    {% if fomr.category.errors %}
+                        <label class="control-label label-error">{{ form.category.errors }}</label>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="id_is_published"><input type="checkbox" name="{{ form.is_published.name }}"
+                            {% if article.is_published %} checked {% endif %}> {% trans 'Publicado' %}</label>
+                </div>
+                <button class="btn btn-primary btn-block"> {% trans "Guardar" %}</button>
+            </div>
+            <div class="col-xs-12 col-md-8">
+                <!-- <h3>{% trans "Contenido" %}</h3> -->
+                <textarea id="content" name="content">{{ form.content.value|safe|default:'' }}</textarea>
+                {% wysiwyg_editor "content" %}
+                {% if form.content.errors %}
+                    <label class="control-label label-error">{{ form.content.errors }}</label>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    <div class="clearfix"></div>
+    <div class="vspacing-4"></div>
+{% endblock content %}
+{% block javascripts_nc %}
+    <script type="text/javascript">
+
+        function upload_img(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#avatar_img_id').attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        $("#change_img_btn").click(function (e) {
+            e.preventDefault();
+            $("#id_image").click();
+        });
+        $("#avatar_img_id").click(function (e) {
+            e.preventDefault();
+            $("#id_image").click();
+        });
+
+    </script>
+{% endblock %}
+

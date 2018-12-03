@@ -1,0 +1,63 @@
+{% extends "index.html" %}
+{% load staticfiles %}
+{% load i18n %}
+{% load thumbnail %}
+{% block content %}
+{#	<div class="container">#}
+{#		<ul class="breadcrumb">#}
+{#			<li><a href="{% url 'home' %}">{% trans "Home" %}</a></li>#}
+{#			<li class="active">{% trans "My Articles" %}</li>#}
+{#		</ul>#}
+{#	</div>#}
+	<div class="container">
+        <div class="vspacing-4"></div>
+		<div class="col-xs-12">
+			<a href="{% url 'new_article' %}" class="btn btn-primary pull-right"><i class="fa fa-newspaper-o"></i> {% trans "Nuevo Artículo" %}</a>
+		</div>
+		<div class="row title-table">
+			<div class="col-xs-6"><h4>{% trans "Título" %}</h4></div>
+			<div class="col-xs-2"><h4>{% trans "Fecha" %}</h4></div>
+            <div class="col-xs-2 text-right"><h4>{% trans "Publicado" %}</h4></div>
+		</div>
+		<hr>
+		{% for article in articles %}
+			<div class="row">
+				<!-- <div class="col-xs-2">
+					{% if article.image %}
+						<img class='image' src="{{ article.image|thumbnail_url:'avatar_small'}}"/>
+					{% else %}
+						<img id="avatar_img_id" style="cursor:pointer; width:50%;"src="{% static 'refresh/img/thumbnail-default.jpg' %}" alt="Profile image" class="img-thumbnail">
+					{% endif %}
+				</div> -->
+				<div class="col-xs-6"><a href="{% url 'edit_article' article.slug %}">{{article.title}}</a></div>
+				<div class="col-xs-2">{{article.date|date:"d F Y"}}</div>
+                <div class="col-xs-2 text-right">{{ article.is_published|yesno:'Si,No' }}</div>
+			</div>
+			<hr>
+		{% empty %}
+			<h3 class="green">{% trans 'No tienes artículos escritos todavía' %}</h3>
+            <div class="clearfix"></div>
+		{% endfor %}
+		{% if is_paginated %}
+	        <div class="row">
+	        	<div class="col-xs-12 text-center">
+	        		<div class="pagination">
+					    <span class="step-links">
+					        {% if articles.has_previous %}
+					            <a href="?page={{ articles.previous_page_number }}">{% trans "anterior" %}</a>
+					        {% endif %}
+
+					        <span class="current">
+					            {% trans 'Pagina' %} {{ articles.number }} {% trans 'de' %} {{ articles.paginator.num_pages }}.
+					        </span>
+
+					        {% if articles.has_next %}
+					            <a href="?page={{ articles.next_page_number }}">{% trans 'siguiente' %}</a>
+					        {% endif %}
+					    </span>
+					</div>
+	        	</div>
+	        </div>
+		{% endif %}
+	</div>
+{% endblock content %}
