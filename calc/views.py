@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.shortcuts import render
 
 # Create your views here.
+from calc.Calc import calc
 from calc.forms import FormularioFunciones
 
 
@@ -14,7 +15,8 @@ def resolver(request):
     problema = None
     if request.method == 'POST':
         formulario = form.save(commit=False)
-        formulario.solucion = "x**2"
+        calculo = calc()
+        formulario.solucion = calculo.control(formulario.problema,formulario.tipo)
         solucion = formulario.solucion
         problema = formulario.problema
         formulario.save()

@@ -1,22 +1,83 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>CalPy</title>
-    <script type="text/javascript" src="/static/jquery.min.js" ></script>
-</head>
-<body>
-    <h1>CalPy</h1>
-    <form action="{% url 'resolver' %}" method="post">
-        {% csrf_token %}
-        {{ formulario.as_p }}
-        <button type="submit">Resolver</button>
-    </form>
-    {% if solucion %}
-        <h2>Problema:</h2>
-        <div>{{ problema }}</div>
-        <h2>Solucion:</h2>
-        <div>{{ solucion }}</div>
-    {% endif %}
-</body>
-</html>
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
+  <!-- Cuerpo -->
+  <div class="content-wrapper">
+    <!-- titulo -->
+    <section class="content-header">
+      <h1>
+        Calpy
+        <small>Iniciar Calulo</small>
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#">Calpy</a></li>
+        <!--<li class="active">Calpy</li>-->
+      </ol>
+    </section>
+
+    <!-- Main -->
+      <section class="content">
+          <div class="row">
+              <!-- Formulas -->
+              <section class="col-lg-5 connectedSortable">
+                  <div class="box box-solid ">
+                      <div class="box-header bg-light-blue-active">
+                          <div class="pull-right box-tools">
+                              <button type="button" class="btn btn-primary btn-sm pull-right" data-widget="collapse"
+                                      data-toggle="tooltip" title="Collapse" style="margin-right: 5px;">
+                                  <i class="fa fa-minus"></i></button>
+                          </div>
+                          <i class="fa fa-bookmark"></i>
+                          <h3 class="box-title">
+                              Formulas
+                          </h3>
+                      </div>
+                      <div class="box-body" >
+                          <div>
+                              <form action="{% url 'resolver' %}" method="post">
+                                  {% csrf_token %}
+                                  <center>
+                                      <table>
+                                          {{ formulario.as_table }}
+                                      </table>
+                                  </center>
+                                  <button type="submit" class="btn bg-olive btn-sm pull-right">Resolver</button>
+                              </form>
+                          </div>
+                      </div>
+                  </div>
+              </section>
+          </div>
+          {% if solucion %}
+          <div class="row">
+              <!-- Problema -->
+              <div class="col-lg-3 col-xs-6">
+                  <div class="small-box bg-aqua">
+                      <div class="inner">
+                          <h3>{{ problema }}</h3>
+                          <p>Problema</p>
+                      </div>
+                      <div class="icon">
+                          <i class="ion ion-search"></i>
+                      </div>
+                  </div>
+              </div>
+              <!-- Solucion -->
+              <div class="col-lg-3 col-xs-6">
+                  <div class="small-box bg-green">
+                      <div class="inner">
+                          <h3>{{ solucion }}</h3>
+                          <p>Solucion</p>
+                      </div>
+                      <div class="icon">
+                          <i class="ion ion-happy-outline"></i>
+                      </div>
+                  </div>
+              </div>
+              <!-- ./col -->
+          </div>
+          {% endif %}
+      </section>
+
+  </div>
+{% endblock content %}
